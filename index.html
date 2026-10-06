@@ -15,17 +15,18 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://m2aq.github.io/ipa_translator/preview.jpg">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23f4f0e8'/%3E%3Ctext x='32' y='48' font-size='72' text-anchor='middle' font-family='serif' fill='%232f6b3a'%3E%C3%A6%3C/text%3E%3C/svg%3E">
+<link rel="preload" as="image" href="preview.jpg">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="IPA Translator">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600&family=Fraunces:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f4f0e8;--ink:#161513;--muted:#7a746a;--line:#d8d1c3;--accent:#2f6b3a;--card:#fbf8f2}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font-family:'Noto Sans',sans-serif;min-height:100vh;display:flex;flex-direction:column}
 main{flex:1;max-width:960px;width:100%;margin:0 auto;padding:56px 24px}
-h1{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(2.2rem,6vw,3.8rem);letter-spacing:-.02em}
-h1 em{color:var(--accent)}
+h1{line-height:0}
+h1 img{display:block;width:min(100%,440px);height:auto}
 .sub{color:var(--muted);margin:10px 0 22px}
 .out{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:18px}
 textarea{width:100%;min-height:96px;border:0;background:transparent;resize:vertical;outline:none;font:400 1.7rem 'Noto Sans',sans-serif;color:var(--ink)}
@@ -68,14 +69,11 @@ footer{background:#000;border-top:1px solid rgba(255,255,255,.1);color:#fff;padd
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
 .m-tag,.m-rights{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.4)}
 .m-rights{text-align:right}
-#splash{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:opacity .6s ease}
+#splash{--w:min(124vw,1000px);position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;overflow:hidden;transition:opacity .6s ease}
 #splash.done{opacity:0;pointer-events:none}
-.sp-title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2.8rem,11vw,5.2rem);letter-spacing:-.02em;line-height:1;white-space:nowrap}
-.sp-title em{font-weight:400;color:var(--accent)}
-.sp-bar{width:min(78vw,520px);height:2px;background:var(--line);overflow:hidden}
+.sp-logo{width:var(--w);max-width:none;height:auto;display:block;user-select:none;-webkit-user-drag:none}
+.sp-bar{width:min(60vw,320px);margin-top:calc(var(--w) * -.11);height:2px;background:var(--line);overflow:hidden}
 .sp-bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .35s ease}
-.sp-ipa{font-family:'Noto Sans',sans-serif;font-size:clamp(.8rem,3vw,1.15rem);color:var(--muted);letter-spacing:.04em;white-space:nowrap}
-.sp-ipa b{font-weight:400;color:var(--accent)}
 .sp-note{font-size:.7rem;color:var(--muted);letter-spacing:.08em;min-height:1em;margin-top:6px}
 #spSkip{background:none;border:0;color:var(--muted);font:400 .72rem 'Noto Sans',sans-serif;text-decoration:underline;opacity:0;pointer-events:none;transition:opacity .4s}
 #spSkip.show{opacity:1;pointer-events:auto}
@@ -86,14 +84,13 @@ footer{background:#000;border-top:1px solid rgba(255,255,255,.1);color:#fff;padd
 </head>
 <body>
 <div id="splash">
-  <div class="sp-title">IPA <em>Translator</em></div>
+  <img class="sp-logo" src="preview.jpg" alt="IPA Translator" fetchpriority="high">
   <div class="sp-bar"><i id="spFill"></i></div>
-  <div class="sp-ipa"><b>/</b>ˌɪntɚˈnæʃənəl fəˈnɛtɪk ˈælfəˌbɛt<b>/</b></div>
   <div class="sp-note" id="spNote">Preparing…</div>
   <button id="spSkip">Skip</button>
 </div>
 <main>
-  <h1>IPA <em>Translator</em></h1>
+  <h1><img src="title.jpg" alt="IPA Translator" width="966" height="139"></h1>
   <p class="sub">Type English text to convert it to IPA, or click the symbols below to write phonetics by hand. Copy when you're done.</p>
 
   <div class="conv">
