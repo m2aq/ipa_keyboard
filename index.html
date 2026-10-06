@@ -88,16 +88,17 @@ footer{background:#000;border-top:1px solid rgba(255,255,255,.1);color:#fff;padd
   <p class="sub">Type English text to convert it to IPA, or click the symbols below to write phonetics by hand. Copy when you're done.</p>
 
   <div class="conv">
-    <h2>Español → English IPA</h2>
+    <h2>Spanish</h2>
     <div class="row">
-      <input id="es" type="text" placeholder="Escribe en español: hola" autocomplete="off" spellcheck="false">
+      <input id="es" type="text" placeholder="Type here: hola" autocomplete="off" spellcheck="false">
       <button class="act" id="goEs">Translate</button>
+      <button class="act ghost" id="listenEs">Listen</button>
     </div>
     <p class="note" id="noteEs"></p>
   </div>
 
   <div class="conv">
-    <h2>Text to IPA</h2>
+    <h2>English</h2>
     <div class="row">
       <input id="src" type="text" placeholder="Type English: hi" autocomplete="off" spellcheck="false">
       <button class="act" id="go">Convert</button>
@@ -106,6 +107,7 @@ footer{background:#000;border-top:1px solid rgba(255,255,255,.1);color:#fff;padd
     <p class="note" id="note"></p>
   </div>
 
+  <h2>Phonetics</h2>
   <div class="out">
     <textarea id="out" placeholder="/haɪ/" spellcheck="false"></textarea>
     <div class="bar">
@@ -318,6 +320,7 @@ async function translate() {
   } catch (e) { note.textContent = 'Could not translate: ' + e.message; }
 }
 document.getElementById('goEs').onclick = translate;
+document.getElementById('listenEs').onclick = () => speak(document.getElementById('es').value.trim(), 'es-MX');
 document.getElementById('es').addEventListener('keydown', e => { if (e.key === 'Enter') translate(); });
 document.getElementById('src').addEventListener('keydown', e => { if (e.key === 'Enter') convert(); });
 
