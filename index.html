@@ -256,9 +256,10 @@ async function translateEsEn(text) {
     if (j.responseStatus !== 200) throw new Error('Translation failed');
     return j.responseData.translatedText.trim();
   };
-  // MyMemory sometimes returns an empty string for short lowercase input; retry capitalized
-  let en = await ask(text);
-  if (!en) en = await ask(text.charAt(0).toUpperCase() + text.slice(1));
+  // MyMemory handles capitalization inconsistently: lowercase first, capitalized only if that comes back empty
+  const low = text.toLowerCase();
+  let en = await ask(low);
+  if (!en) en = await ask(low.charAt(0).toUpperCase() + low.slice(1));
   if (!en) throw new Error('no translation returned, try adding accents or more words');
   return { text: en, via: 'MyMemory' };
 }
