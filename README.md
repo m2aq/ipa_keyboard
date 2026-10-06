@@ -1,8 +1,8 @@
-# IPA Keyboard
+# IPA Translator
 
 Type English text and get its IPA transcription, or write phonetics by hand with a clean keyboard of English IPA symbols.
 
-Live: https://m2aq.github.io/ipa_keyboard/
+Live: https://m2aq.github.io/ipa_translator/
 
 ## Credits
 
