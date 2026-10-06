@@ -68,10 +68,20 @@ footer{background:#000;border-top:1px solid rgba(255,255,255,.1);color:#fff;padd
   <p class="sub">Type English text to convert it to IPA, or click the symbols below to write phonetics by hand. Copy when you're done.</p>
 
   <div class="conv">
+    <h2>Español → English IPA</h2>
+    <div class="row">
+      <input id="es" type="text" placeholder="Escribe en español: hola" autocomplete="off" spellcheck="false">
+      <button class="act" id="goEs">Translate</button>
+    </div>
+    <p class="note" id="noteEs"></p>
+  </div>
+
+  <div class="conv">
     <h2>Text to IPA</h2>
     <div class="row">
       <input id="src" type="text" placeholder="Type English: hi" autocomplete="off" spellcheck="false">
       <button class="act" id="go">Convert</button>
+      <button class="act ghost" id="listen">Listen</button>
     </div>
     <p class="note" id="note"></p>
   </div>
@@ -83,6 +93,7 @@ footer{background:#000;border-top:1px solid rgba(255,255,255,.1);color:#fff;padd
       <button class="act ghost" id="slash">Wrap in / /</button>
       <button class="act ghost" id="back">⌫</button>
       <button class="act ghost" id="clear">Clear</button>
+      <button class="act ghost" id="snd" aria-pressed="true">Key sound: on</button>
     </div>
   </div>
 
@@ -117,10 +128,28 @@ for (const [name, list] of Object.entries(groups)) {
     const b = document.createElement('button');
     b.className = 'key';
     b.innerHTML = `<b>${sym}</b><small>${ex}</small>`;
-    b.onclick = () => insert(sym);
+    b.onclick = () => { insert(sym); if (name !== 'Marks' && soundOn) speak(ex.replace(/\s*\(.*\)/, '')); };
     g.appendChild(b);
   });
   box.appendChild(s);
+}
+/* ---------- Speech ---------- */
+let soundOn = true;
+try { soundOn = localStorage.getItem('keySound') !== 'off'; } catch (_) {}
+function speak(text, lang) {
+  if (!('speechSynthesis' in window) || !text) return;
+  lang = lang || 'en-US';
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = lang;
+  const v = speechSynthesis.getVoices().find(v => v.lang.replace('_', '-') === lang);
+  if (v) u.voice = v;
+  if (speechSynthesis.speaking || speechSynthesis.pending) speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+function paintSnd() {
+  const b = document.getElementById('snd');
+  b.textContent = 'Key sound: ' + (soundOn ? 'on' : 'off');
+  b.setAttribute('aria-pressed', soundOn);
 }
 function insert(t){
   const a = out.selectionStart, z = out.selectionEnd;
@@ -201,6 +230,45 @@ async function convert() {
   if (!touch) out.focus();
 }
 document.getElementById('go').onclick = convert;
+document.getElementById('listen').onclick = () => speak(document.getElementById('src').value.trim());
+document.getElementById('snd').onclick = () => {
+  soundOn = !soundOn;
+  try { localStorage.setItem('keySound', soundOn ? 'on' : 'off'); } catch (_) {}
+  paintSnd();
+};
+paintSnd();
+
+/* ---------- Spanish -> English ---------- */
+const within = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
+async function translateEsEn(text) {
+  if ('Translator' in self) {
+    try {
+      const opts = { sourceLanguage: 'es', targetLanguage: 'en' };
+      if ((await within(Translator.availability(opts), 2000)) === 'available') {
+        const t = await within(Translator.create(opts), 4000);
+        return { text: await within(t.translate(text), 8000), via: 'Chrome' };
+      }
+    } catch (_) {}
+  }
+  const r = await within(fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=es|en'), 10000);
+  const j = await r.json();
+  if (j.responseStatus !== 200) throw new Error('Translation failed');
+  return { text: j.responseData.translatedText, via: 'MyMemory' };
+}
+async function translate() {
+  const note = document.getElementById('noteEs');
+  const text = document.getElementById('es').value.trim();
+  if (!text) return;
+  note.textContent = 'Translating…';
+  try {
+    const { text: en, via } = await translateEsEn(text);
+    document.getElementById('src').value = en;
+    note.textContent = 'Translated with ' + via + ' → ' + en;
+    convert();
+  } catch (e) { note.textContent = 'Could not translate: ' + e.message; }
+}
+document.getElementById('goEs').onclick = translate;
+document.getElementById('es').addEventListener('keydown', e => { if (e.key === 'Enter') translate(); });
 document.getElementById('src').addEventListener('keydown', e => { if (e.key === 'Enter') convert(); });
 
 document.getElementById('copy').onclick = async e => {
