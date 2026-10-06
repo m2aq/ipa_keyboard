@@ -26,7 +26,7 @@ body{background:var(--bg);color:var(--ink);font-family:'Noto Sans',sans-serif;mi
 main{flex:1;max-width:960px;width:100%;margin:0 auto;padding:56px 24px}
 h1{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(2.2rem,6vw,3.8rem);letter-spacing:-.02em}
 h1 em{color:var(--accent)}
-.sub{color:var(--muted);margin:10px 0 36px}
+.sub{color:var(--muted);margin:10px 0 22px}
 .out{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:18px}
 textarea{width:100%;min-height:96px;border:0;background:transparent;resize:vertical;outline:none;font:400 1.7rem 'Noto Sans',sans-serif;color:var(--ink)}
 .bar{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
@@ -34,14 +34,18 @@ button{font:600 .8rem 'Noto Sans',sans-serif;cursor:pointer}
 .act{background:var(--ink);color:var(--bg);border:0;padding:9px 16px;border-radius:4px;letter-spacing:.04em;text-transform:uppercase}
 .act.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
 .act:hover{background:var(--accent);color:#fff}
-.conv{margin-bottom:22px}
+.conv{margin-bottom:12px}
+.conv h2,.phon h2{margin-bottom:6px}
 .row{display:flex;gap:8px}
 .row input{flex:1;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:12px 14px;font:400 1.1rem 'Noto Sans',sans-serif;color:var(--ink);outline:none}
 .row input:focus{border-color:var(--accent)}
 .row .act{width:112px;padding-left:0;padding-right:0;text-align:center}
 .row .act:not(.ghost){border:1px solid transparent}
-.phon{position:sticky;top:0;z-index:20;background:var(--bg);padding:10px 0 14px}
-.note{min-height:1.2em;margin-top:8px;font-size:.8rem;color:var(--muted)}
+.phon{position:sticky;top:0;z-index:20;background:var(--bg);padding:4px 0 10px}
+.phon::before{content:'';position:absolute;z-index:-1;top:0;bottom:0;left:-24px;right:-24px;background:var(--bg)}
+.phon::after{content:'';position:absolute;left:-24px;right:-24px;top:100%;height:22px;background:linear-gradient(var(--bg) 25%,rgba(244,240,232,0));pointer-events:none}
+.note{margin-top:6px;font-size:.8rem;color:var(--muted)}
+.note:empty{display:none}
 .credits{margin:0;padding:0 24px 10px;text-align:center;font-size:.68rem;color:var(--muted);opacity:.55;line-height:1.5}
 .credits a{color:inherit}
 section{margin-top:34px}
