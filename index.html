@@ -38,13 +38,15 @@ button{font:600 .8rem 'Noto Sans',sans-serif;cursor:pointer}
 .row{display:flex;gap:8px}
 .row input{flex:1;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:12px 14px;font:400 1.1rem 'Noto Sans',sans-serif;color:var(--ink);outline:none}
 .row input:focus{border-color:var(--accent)}
+.row .act{width:112px;padding-left:0;padding-right:0;text-align:center}
+.row .act:not(.ghost){border:1px solid transparent}
+.phon{position:sticky;top:0;z-index:20;background:var(--bg);padding:10px 0 14px}
 .note{min-height:1.2em;margin-top:8px;font-size:.8rem;color:var(--muted)}
 .credits{margin:0;padding:0 24px 10px;text-align:center;font-size:.68rem;color:var(--muted);opacity:.55;line-height:1.5}
 .credits a{color:inherit}
 section{margin-top:34px}
 h2{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:12px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
-.grid.labels{grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
 .key{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:12px 6px 9px;text-align:center;transition:.15s;color:var(--ink)}
 .key:hover{border-color:var(--accent);transform:translateY(-2px)}
 .key:active{background:var(--accent);color:#fff}
@@ -73,7 +75,8 @@ footer{background:#000;border-top:1px solid rgba(255,255,255,.1);color:#fff;padd
 .sp-note{font-size:.7rem;color:var(--muted);letter-spacing:.08em;min-height:1em;margin-top:6px}
 #spSkip{background:none;border:0;color:var(--muted);font:400 .72rem 'Noto Sans',sans-serif;text-decoration:underline;opacity:0;pointer-events:none;transition:opacity .4s}
 #spSkip.show{opacity:1;pointer-events:auto}
-@media(max-width:700px){.grid:not(.labels){grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:6px}.grid:not(.labels) .key{padding:4px 2px 3px}.grid:not(.labels) .key b{line-height:1.1}.grid:not(.labels) .key small{font-size:.6rem;line-height:1.2;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+@media(max-width:700px){.row{flex-wrap:wrap}.row input{flex:1 1 100%}.row .act{flex:1;width:auto}.phon{padding:6px 0 8px}.phon h2{margin-bottom:6px}.out{padding:10px 12px}textarea{min-height:56px;font-size:1.4rem}.bar{margin-top:6px}}
+@media(max-width:700px){.grid{grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:6px}.grid .key{padding:4px 2px 3px}.grid .key b{line-height:1.1}.grid .key small{font-size:.6rem;line-height:1.2;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
 @media(max-width:700px){footer{grid-template-columns:1fr;justify-items:center;text-align:center}footer>span{display:none}.m-center{flex-direction:column;gap:8px}.m-center .m-logo{padding-left:0;border-left:0}.m-rights{text-align:center}}
 </style>
 </head>
@@ -109,6 +112,7 @@ footer{background:#000;border-top:1px solid rgba(255,255,255,.1);color:#fff;padd
     <p class="note" id="note"></p>
   </div>
 
+  <div class="phon">
   <h2>Phonetics</h2>
   <div class="out">
     <textarea id="out" placeholder="/haɪ/" spellcheck="false"></textarea>
@@ -119,6 +123,7 @@ footer{background:#000;border-top:1px solid rgba(255,255,255,.1);color:#fff;padd
       <button class="act ghost" id="clear">Clear</button>
       <button class="act ghost" id="snd" aria-pressed="true">Key sound: on</button>
     </div>
+  </div>
   </div>
 
   <div id="keys"></div>
@@ -139,7 +144,7 @@ const groups = {
   "Vowels": [["iː","sheep"],["ɪ","ship"],["ɛ","bed"],["æ","cat"],["ɑː","father"],["ɒ","hot"],["ɔː","door"],["ʊ","foot"],["uː","blue"],["ʌ","cup"],["ɜː","bird"],["ə","about"]],
   "Diphthongs": [["eɪ","day"],["aɪ","my"],["ɔɪ","boy"],["aʊ","now"],["əʊ","go (UK)"],["oʊ","go (US)"],["ɪə","here"],["eə","hair"],["ʊə","tour"]],
   "Consonants": [["p","pen"],["b","bad"],["t","tea"],["d","dog"],["k","cat"],["ɡ","go"],["f","fan"],["v","van"],["θ","think"],["ð","this"],["s","sun"],["z","zoo"],["ʃ","she"],["ʒ","vision"],["h","hat"],["tʃ","chair"],["dʒ","jam"],["m","man"],["n","no"],["ŋ","sing"],["l","leg"],["r","red"],["j","yes"],["w","we"]],
-  "Marks": [["ˈ","primary stress"],["ˌ","secondary"],["ː","long"],[".","syllable"],["/","slash"]]
+  "Marks": [["ˈ","primary"],["ˌ","secondary"],["ː","long"],[".","syllable"],["/","slash"]]
 };
 const out = document.getElementById('out');
 const touch = window.matchMedia('(pointer: coarse)').matches;
@@ -148,7 +153,6 @@ for (const [name, list] of Object.entries(groups)) {
   const s = document.createElement('section');
   s.innerHTML = `<h2>${name}</h2><div class="grid"></div>`;
   const g = s.querySelector('.grid');
-  if (name === 'Marks') g.classList.add('labels');
   list.forEach(([sym, ex]) => {
     const b = document.createElement('button');
     b.className = 'key';
@@ -317,9 +321,9 @@ async function translate() {
   if (!text) return;
   note.textContent = 'Translating…';
   try {
-    const { text: en, via } = await translateEsEn(text, pct => { note.textContent = 'Downloading translation model… ' + pct + '% (first time only)'; });
+    const { text: en } = await translateEsEn(text, pct => { note.textContent = 'Downloading translation model… ' + pct + '% (first time only)'; });
     document.getElementById('src').value = en;
-    note.textContent = 'Translated with ' + via + ' → ' + en;
+    note.textContent = '';
     convert();
   } catch (e) { note.textContent = 'Could not translate: ' + e.message; }
 }
