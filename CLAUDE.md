@@ -4,7 +4,7 @@ Página web estática, en inglés, que convierte texto a transcripción fonétic
 
 - Repositorio: https://github.com/m2aq/ipa_translator (público; antes se llamaba `ipa_keyboard`. GitHub redirige el repositorio viejo, pero la página vieja `m2aq.github.io/ipa_keyboard/` da 404)
 - En línea (GitHub Pages, rama `main`, raíz): https://m2aq.github.io/ipa_translator/
-- La carpeta local se llama `ipa_translator` (en la PC de trabajo se renombró desde `ipa-keyboard` el 2026-10-06). En otra PC puede llamarse distinto según cuándo se clonó; el nombre de la carpeta no importa, lo que cuenta es el remoto (`git remote -v`).
+- En las dos PC (trabajo y casa) la carpeta local se llama `ipa_translator`, igual que el repositorio y el proyecto (antes se llamaba `ipa-keyboard`).
 
 ## Cómo trabajar (dos computadoras: trabajo y casa)
 
@@ -33,7 +33,7 @@ Las imágenes de logo las genera el usuario con otra herramienta de imágenes (p
 ## Funciones de la página
 
 1. **Spanish → English → IPA:** campo "Spanish" (Translate). Traduce al inglés y luego convierte. Botón Listen lee el español (voz `es-MX`).
-   - Traducción principal: modelo local en el navegador, Transformers.js (`@huggingface/transformers@3` desde cdn.jsdelivr.net) con `Xenova/opus-mt-es-en`. Descarga ~80 MB la primera vez; luego queda en caché del navegador.
+   - Traducción principal: modelo local en el navegador, Transformers.js (`@huggingface/transformers@3` desde cdn.jsdelivr.net) con `Xenova/opus-mt-es-en`. Descarga ~115 MB la primera vez; luego queda en caché del navegador.
    - Respaldo: API pública MyMemory (`api.mymemory.translated.net`). OJO: ahí el texto sale a un servicio externo. Trata mayúsculas raro; el código prueba minúsculas primero.
 2. **English → IPA:** campo "English" (Convert). Usa el CMU dict, inglés americano. Botón Listen lee el inglés (`en-US`).
 3. **Phonetics:** cuadro de texto con el resultado, editable. Botones: Copy (con respaldo `execCommand` y mensaje "Press Ctrl+C"), Wrap in / /, ⌫, Clear, Key sound on/off (se guarda en localStorage).
@@ -71,6 +71,15 @@ Las imágenes de logo las genera el usuario con otra herramienta de imágenes (p
 - Idea original: Omar Gámez. Desarrollo: m2aq.
 - CMU Pronouncing Dictionary © 1993-2015 Carnegie Mellon University, licencia BSD: debe conservarse `LICENSE-cmudict.txt` y la línea de créditos en la página. No mezclar datos de Wiktionary (CC BY-SA) sin pensarlo.
 - Modelo `Xenova/opus-mt-es-en` (Helsinki-NLP) cargado por Transformers.js desde CDN: es una dependencia externa en tiempo de ejecución.
+
+## Estado del proyecto
+
+- Probado en iPhone real: funciona todo (audio, cuadro Phonetics fijo, icono en pantalla de inicio y vista previa de WhatsApp).
+
+## Limitaciones conocidas
+
+- El traductor local falla con modismos (por ejemplo "me cae gordo"); para eso haría falta un traductor en la nube.
+- Safari puede borrar la caché del modelo (~115 MB) si no se abre el sitio en una semana.
 
 ## Ideas pendientes / futuro
 
