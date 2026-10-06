@@ -250,10 +250,17 @@ async function translateEsEn(text) {
       }
     } catch (_) {}
   }
-  const r = await within(fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=es|en'), 10000);
-  const j = await r.json();
-  if (j.responseStatus !== 200) throw new Error('Translation failed');
-  return { text: j.responseData.translatedText, via: 'MyMemory' };
+  const ask = async q => {
+    const r = await within(fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(q) + '&langpair=es|en'), 10000);
+    const j = await r.json();
+    if (j.responseStatus !== 200) throw new Error('Translation failed');
+    return j.responseData.translatedText.trim();
+  };
+  // MyMemory sometimes returns an empty string for short lowercase input; retry capitalized
+  let en = await ask(text);
+  if (!en) en = await ask(text.charAt(0).toUpperCase() + text.slice(1));
+  if (!en) throw new Error('no translation returned, try adding accents or more words');
+  return { text: en, via: 'MyMemory' };
 }
 async function translate() {
   const note = document.getElementById('noteEs');
