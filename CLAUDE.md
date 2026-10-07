@@ -11,7 +11,7 @@ Página web estática, en inglés, que convierte texto a transcripción fonétic
 GitHub es el único puente entre las PC. Claude no recuerda nada de una máquina a otra; este archivo es su contexto.
 
 1. **Al empezar a trabajar:** verificar carpeta, rama, `git status -sb` y `git remote -v`; luego `git fetch` y, si no hay cambios locales ni divergencias, `git pull --ff-only`. Si hay cualquier discrepancia, detenerse y avisar. Nunca editar sin traer lo último.
-2. **Al terminar:** `git add`, `git commit`, `git push`. Lo que no se sube no existe en la otra PC.
+2. **Al terminar:** dejar los cambios listos y avisar si algo queda sin subir. Solo se hace `git add`, `git commit` y `git push` cuando el usuario diga "súbelo". Lo que no se sube no existe en la otra PC.
 3. Si el remoto apunta a `ipa_keyboard`, corregirlo: `git remote set-url origin https://github.com/m2aq/ipa_translator.git`.
 4. Publicar = push a `main`; GitHub Pages tarda 1-2 min en actualizar. WhatsApp cachea la vista previa de los enlaces: subir primero, compartir después.
 5. Este repo es PÚBLICO y GitHub Pages sirve todos sus archivos por URL (incluido este). No poner aquí contraseñas, claves, correos ni datos personales.
