@@ -10,7 +10,7 @@ Página web estática, en inglés, que convierte texto a transcripción fonétic
 
 GitHub es el único puente entre las PC. Claude no recuerda nada de una máquina a otra; este archivo es su contexto.
 
-1. **Al empezar a trabajar:** `git pull` (o `git fetch` + `git status -sb` para ver si hay algo nuevo). Nunca editar sin traer lo último.
+1. **Al empezar a trabajar:** verificar carpeta, rama, `git status -sb` y `git remote -v`; luego `git fetch` y, si no hay cambios locales ni divergencias, `git pull --ff-only`. Si hay cualquier discrepancia, detenerse y avisar. Nunca editar sin traer lo último.
 2. **Al terminar:** `git add`, `git commit`, `git push`. Lo que no se sube no existe en la otra PC.
 3. Si el remoto apunta a `ipa_keyboard`, corregirlo: `git remote set-url origin https://github.com/m2aq/ipa_translator.git`.
 4. Publicar = push a `main`; GitHub Pages tarda 1-2 min en actualizar. WhatsApp cachea la vista previa de los enlaces: subir primero, compartir después.
@@ -38,7 +38,7 @@ Las imágenes de logo las genera el usuario con otra herramienta de imágenes (p
 2. **English → IPA:** campo "English" (Convert). Usa el CMU dict, inglés americano. Botón Listen lee el inglés (`en-US`).
 3. **Phonetics:** cuadro de texto con el resultado, editable. Botones: Copy (con respaldo `execCommand` y mensaje "Press Ctrl+C"), Wrap in / /, ⌫, Clear, Key sound on/off (se guarda en localStorage).
 4. **Teclado IPA:** vocales, diptongos, consonantes y marcas (ˈ ˌ ː . /). Cada tecla muestra una palabra de ejemplo; al tocarla inserta el símbolo y, si Key sound está activo, lee la palabra de ejemplo con Web Speech API. Las marcas no suenan.
-5. **Pantalla de carga (splash):** muestra `preview.jpg` grande con barra de progreso mientras precarga el diccionario y el modelo de traducción; botón "Skip" aparece a los 4 s.
+5. **Pantalla de carga (splash):** muestra `preview.jpg` grande con barra de progreso mientras precarga el diccionario y el modelo de traducción; botón "Skip" aparece a los 4 s. Existe por una razón funcional (la primera visita descarga ~115 MB), no como adorno: no quitarla ni acortarla sin reemplazar esa precarga. Esto es una excepción deliberada a la regla global de evitar pantallas de carga.
 6. Sección "Phonetics" es `position: sticky` arriba para que se vea al bajar por el teclado.
 
 ## Conversión ARPAbet → IPA (lógica propia, sin librería)
